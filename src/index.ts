@@ -17,6 +17,7 @@ messages.on('onLogin', (key) => {
   const loginTags = env?.project?.logins?.find((l) => l.$modelId === key || l.key === key)?.tags || [];
 
   const loginTagsRestricted = conf.get('tags', []).filter((t) => loginTags.includes(t.tag));
+
   // no tag is restricted
   if (loginTagsRestricted.length === 0) {
     return;
@@ -27,6 +28,7 @@ messages.on('onLogin', (key) => {
     return;
   }
 
+  platform.log('restricted-login', loginTags, deviceTags);
   const errMsg = conf.get('errorString', 'O dispositivo não está autorizado para esse login.');
   return env.setData('RETURN_VALUE', {error: errMsg});
 });
