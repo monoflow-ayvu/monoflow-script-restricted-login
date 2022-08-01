@@ -31,7 +31,11 @@ describe("onInit", () => {
     };
     loadScript();
 
-    expect(() => messages.emit('onLogin', 'asd', '')).toThrowError(new Error('custom error'));
+    env.setData('RETURN_VALUE', undefined);
+    messages.emit('onLogin', 'asd', '');
+    expect(env.data.RETURN_VALUE).toStrictEqual({
+      error: 'custom error',
+    });
   });
 
   it('permits login if both device and login have same locking tag', () => {
@@ -47,6 +51,8 @@ describe("onInit", () => {
     };
     loadScript();
 
-    expect(() => messages.emit('onLogin', 'asd', '')).not.toThrow();
+    env.setData('RETURN_VALUE', undefined);
+    messages.emit('onLogin', 'asd', '');
+    expect(env.data.RETURN_VALUE).toBeUndefined();
   });
 });

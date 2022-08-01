@@ -28,5 +28,6 @@ messages.on('onLogin', (key) => {
   }
 
   const errMsg = conf.get('errorString', 'O dispositivo não está autorizado para esse login.');
-  throw new Error(errMsg);
+  return env.setData('RETURN_VALUE', {error: errMsg});
 });
+
