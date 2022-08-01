@@ -1,25 +1,53 @@
 {
-  "name": "monoflow-script-env",
-  "version": "1.18.0",
-  "description": "Script padrão de todos os scripts. Template para criar um script.",
+  "name": "restricted-login",
+  "version": "1.0.0",
+  "description": "Script para restringir logins a dispositivos específicos",
   "settingsSchema": {
     "display": "form",
     "components": [
       {
-        "label": "Nome",
-        "description": "Nome para saludar",
+        "label": "Erro para apresentar caso dispositivo não tenha a mesma tag",
         "tableView": true,
-        "key": "name",
+        "key": "errorString",
         "type": "textfield",
         "input": true,
-        "defaultValue": "User"
+        "defaultValue": "O dispositivo não está autorizado para esse login."
+      },
+      {
+        "label": "Tags",
+        "tooltip": "Se um login tiver essa tag, só pode acessar numa maquina com a mesma tag.",
+        "reorder": true,
+        "addAnother": "Adicionar",
+        "addAnotherPosition": "bottom",
+        "layoutFixed": false,
+        "enableRowGroups": false,
+        "initEmpty": true,
+        "tableView": false,
+        "defaultValue": [
+          {
+            "tag1": ""
+          }
+        ],
+        "key": "tags",
+        "type": "datagrid",
+        "input": true,
+        "components": [
+          {
+            "label": "Tag",
+            "tableView": true,
+            "case": "lowercase",
+            "truncateMultipleSpaces": true,
+            "key": "tag",
+            "type": "textfield",
+            "input": true
+          }
+        ]
       },
       {
         "type": "button",
         "label": "Submit",
         "key": "submit",
         "disableOnInvalid": true,
-        "block": true,
         "input": true,
         "tableView": false
       }

@@ -13,29 +13,40 @@ describe("onInit", () => {
     messages.removeAllListeners();
   });
 
-  it('runs without errors', () => {
+  it('can login if device and login have no tags', () => {
     loadScript();
-    messages.emit('onInit');
+    messages.emit('onLogin', 'asd', '');
   });
 
-  it('prints "Hello, default name!"', () => {
-    const log = jest.fn();
-    platform.log = log;
-
+  it('shows error if device doesnt have login tag', () => {
+    getSettings = () => ({
+      errorString: 'custom error',
+      tags: [{tag: 'foobar'}],
+    });
+    (env as any).project = {
+      logins: [{key: 'asd', tags: ['foobar']}],
+      usersManager: {
+        users: [{$modelId: 'TEST', tags: []}]
+      }
+    };
     loadScript();
 
-    messages.emit('onInit');
-    expect(log).toHaveBeenCalledWith('Hello, default name!');
+    expect(() => messages.emit('onLogin', 'asd', '')).toThrowError(new Error('custom error'));
   });
 
-  it('prints "Hello, custom name!" if given config', () => {
-    const log = jest.fn();
-    platform.log = log;
-    getSettings = () => ({ name: 'custom name' });
-
+  it('permits login if both device and login have same locking tag', () => {
+    getSettings = () => ({
+      errorString: 'custom error',
+      tags: [{tag: 'foobar'}],
+    });
+    (env as any).project = {
+      logins: [{key: 'asd', tags: ['foobar']}],
+      usersManager: {
+        users: [{$modelId: 'TEST', tags: ['foobar']}]
+      }
+    };
     loadScript();
 
-    messages.emit('onInit');
-    expect(log).toHaveBeenCalledWith('Hello, custom name!');
+    expect(() => messages.emit('onLogin', 'asd', '')).not.toThrow();
   });
 });
