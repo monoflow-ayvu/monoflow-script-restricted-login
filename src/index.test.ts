@@ -55,4 +55,24 @@ describe("onInit", () => {
     messages.emit('onLogin', 'asd', '');
     expect(env.data.RETURN_VALUE).toBeUndefined();
   });
+
+  it('denies login if both device and login have locking tag but different', () => {
+    getSettings = () => ({
+      errorString: 'custom error',
+      tags: [{tag: 'foobar'}, {tag: 'barfoo'}],
+    });
+    (env as any).project = {
+      logins: [{key: 'asd', tags: ['foobar']}],
+      usersManager: {
+        users: [{$modelId: 'TEST', tags: ['barfoo']}]
+      }
+    };
+    loadScript();
+
+    env.setData('RETURN_VALUE', undefined);
+    messages.emit('onLogin', 'asd', '');
+    expect(env.data.RETURN_VALUE).toStrictEqual({
+      error: 'custom error',
+    });
+  });
 });
